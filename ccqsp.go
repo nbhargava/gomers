@@ -6,39 +6,46 @@ import (
 )
 
 type CCQSP struct {
-	Name              string             `json:"name"`
-	Id                int                `json:"id"`
-	Objective         string             `json:"objective"`
-	Events            []Event            `json:"events"`
-	Episodes          []Episode          `json:"episodes"`
-	ChanceConstraints []ChanceConstraint `json:"chanceConstraints"`
-	Requirements      []string           `json:"require"`
-	StateSpace        StateSpace         `json:"stateSpace"`
+	Name              string                  `json:"name"`
+	Id                int                     `json:"id"`
+	Objective         string                  `json:"objective"`
+	Events            []Event                 `json:"events"`
+	Episodes          []Episode               `json:"episodes"`
+	ChanceConstraints []ChanceConstraint      `json:"chanceConstraints"`
+	Requirements      []string                `json:"require"`
+	Annotations       *map[string]interface{} `json:"annotations"`
+	StateSpace        StateSpace              `json:"stateSpace"`
 }
 
 type Event struct {
-	Name string `json:"name"`
-	Id   int    `json:"id"`
+	Name        string                  `json:"name"`
+	Id          int                     `json:"id"`
+	Annotations *map[string]interface{} `json:"annotations"`
 }
 
 type Episode struct {
-	Name              string    `json:"name"`
-	Id                int       `json:"id"`
-	FromEvent         int       `json:"fromEvent"`
-	ToEvent           int       `json:"toEvent"`
-	Predicate         Predicate `json:"predicate"`
-	PredicateDuration string    `json:"predicateDuration"`
+	Name              string                  `json:"name"`
+	Id                int                     `json:"id"`
+	FromEvent         int                     `json:"fromEvent"`
+	ToEvent           int                     `json:"toEvent"`
+	LowerBound        *int                    `json:"lowerBound"`
+	UpperBound        *int                    `json:"upperBound"`
+	Predicate         Predicate               `json:"predicate"`
+	PredicateDuration string                  `json:"predicateDuration"`
+	Annotations       *map[string]interface{} `json:"annotations"`
 }
 
 type Predicate struct {
-	Type string `json:"type"`
+	Type        string                  `json:"type"`
+	Annotations *map[string]interface{} `json:"annotations"`
 }
 
 type ChanceConstraint struct {
-	Name               string  `json:"name"`
-	Id                 int     `json:"id"`
-	ConstraintIds      []int   `json:"constraints"`
-	FailureProbability float64 `json:"failureProbability"`
+	Name               string                  `json:"name"`
+	Id                 int                     `json:"id"`
+	ConstraintIds      []int                   `json:"constraints"`
+	FailureProbability float64                 `json:"failureProbability"`
+	Annotations        *map[string]interface{} `json:"annotations"`
 }
 
 type StateSpace struct {
