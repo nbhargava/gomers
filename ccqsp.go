@@ -49,7 +49,14 @@ type ChanceConstraint struct {
 }
 
 type StateSpace struct {
+	EventAssignments []EventAssignment `json:"eventAssignments"`
 	AgentAssignments []AgentAssignment `json:"agentAssignments"`
+}
+
+type EventAssignment struct {
+	Id         int     `json:"event"`
+	LowerBound float64 `json:"lowerBound"`
+	UpperBound float64 `json:"upperBound"`
 }
 
 type AgentAssignment struct {
