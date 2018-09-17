@@ -36,8 +36,9 @@ type Episode struct {
 }
 
 type Predicate struct {
-	Type        string                  `json:"type"`
-	Annotations *map[string]interface{} `json:"annotations"`
+	Type        string
+	Args        map[string]interface{}
+	Annotations *map[string]interface{}
 }
 
 type ChanceConstraint struct {
@@ -85,5 +86,39 @@ func (a *Assignment) UnmarshalJSON(buf []byte) error {
 	if g, e := len(tmp), wantLen; g != e {
 		return fmt.Errorf("wrong number of fields in Assignment: %d != %d", g, e)
 	}
+	return nil
+}
+
+func (p *Predicate) UnmarshalJSON(buf []byte) error {
+	var predicate map[string]interface{}
+	if err := json.Unmarshal(buf, &predicate); err != nil {
+		return err
+	}
+
+	predType, ok := predicate["type"].(string)
+	if !ok {
+		return fmt.Errorf("`type` not provided in %v", predicate)
+	}
+	p.Type = predType
+	delete(predicate, "type")
+
+	annotations, ok := predicate["annotations"].(map[string]interface{})
+	if ok {
+		p.Annotations = &annotations
+		delete(predicate, "annotations")
+	}
+
+	// Check for required fields
+	// TODO: Do this for things other than Dynamics
+	_, ok = predicate["dynamicsMode"].(string)
+	if !ok {
+		return fmt.Errorf("`dynamicsMode` not properly specified for dynamics predicate in %v", predicate)
+	}
+	_, ok = predicate["agents"].([]int)
+	if !ok {
+		return fmt.Errorf("`agents` not properly specified for dynamics predicate in %v", predicate)
+	}
+
+	p.Args = predicate
 	return nil
 }
