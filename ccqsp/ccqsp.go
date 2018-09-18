@@ -1,4 +1,4 @@
-package gomers
+package ccqsp
 
 import (
 	"encoding/json"
