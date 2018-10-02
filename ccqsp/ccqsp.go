@@ -110,13 +110,26 @@ func (p *Predicate) UnmarshalJSON(buf []byte) error {
 
 	// Check for required fields
 	// TODO: Do this for things other than Dynamics
-	_, ok = predicate["dynamicsMode"].(string)
-	if !ok {
-		return fmt.Errorf("`dynamicsMode` not properly specified for dynamics predicate in %v", predicate)
-	}
-	_, ok = predicate["agents"].([]int)
-	if !ok {
-		return fmt.Errorf("`agents` not properly specified for dynamics predicate in %v", predicate)
+	switch predType {
+	case "dynamics":
+		_, ok = predicate["dynamicsMode"].(string)
+		if !ok {
+			return fmt.Errorf("`dynamicsMode` not properly specified for dynamics predicate in %v", predicate)
+		}
+
+		agents, ok := predicate["agents"].([]interface{})
+		agentInts := []int{}
+		for _, agent := range agents {
+			a, ok := agent.(float64)
+			if !ok {
+				return fmt.Errorf("`agents` must be a list of ids in dynamics predicate in %v", predicate)
+			}
+			agentInts = append(agentInts, int(a))
+		}
+		predicate["agents"] = agentInts
+		if !ok {
+			return fmt.Errorf("`agents` not properly specified for dynamics predicate in %v", predicate)
+		}
 	}
 
 	p.Args = predicate
