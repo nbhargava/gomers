@@ -11,4 +11,10 @@ type Vehicle struct {
 }
 
 type Dynamics struct {
+	StateBounds StateBounds `json:"stateBounds"`
+}
+
+type StateBounds struct {
+	StateUpperBounds []*float64 `json:"stateUpperBounds"`
+	StateLowerBounds []*float64 `json:"stateLowerBounds"`
 }
