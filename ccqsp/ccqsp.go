@@ -73,7 +73,7 @@ type ParameterAssignment struct {
 
 type Assignment struct {
 	Time       float64
-	Parameters interface{}
+	Parameters *[]float64
 }
 
 // Adapted from http://eagain.net/articles/go-json-array-to-struct/
