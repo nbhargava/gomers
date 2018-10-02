@@ -11,6 +11,7 @@ type Vehicle struct {
 }
 
 type Dynamics struct {
+	Name        string      `json:"name"`
 	StateBounds StateBounds `json:"stateBounds"`
 }
 
