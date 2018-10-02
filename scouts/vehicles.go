@@ -2,10 +2,10 @@ package scouts
 
 type Vehicle struct {
 	Name            string     `json:"name"`
-	StateVariables  []string   `json:"state_variables"`
-	DefaultDynamics string     `json:"default_dynamics"`
-	DynamicsModes   []Dynamics `json:"dynamic_modes"`
-	ScriptCompiler  string     `json:"script_compiler"`
+	StateVariables  []string   `json:"stateVariables"`
+	DefaultDynamics string     `json:"defaultDynamics"`
+	DynamicsModes   []Dynamics `json:"dynamicModes"`
+	ScriptCompiler  string     `json:"scriptCompiler"`
 }
 
 type Dynamics struct {
