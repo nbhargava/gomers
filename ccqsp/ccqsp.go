@@ -1,6 +1,7 @@
 package ccqsp
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -36,9 +37,9 @@ type Episode struct {
 }
 
 type Predicate struct {
-	Type        string
-	Args        map[string]interface{}
-	Annotations *map[string]interface{}
+	Type        string                  `json:"type"`
+	Args        map[string]interface{}  `json:"args"`
+	Annotations *map[string]interface{} `json:"annotations"`
 }
 
 type ChanceConstraint struct {
@@ -87,6 +88,27 @@ func (a *Assignment) UnmarshalJSON(buf []byte) error {
 		return fmt.Errorf("wrong number of fields in Assignment: %d != %d", g, e)
 	}
 	return nil
+}
+
+func (a *Assignment) MarshalJSON() ([]byte, error) {
+	buffer := bytes.NewBufferString("[")
+	jsonValue, err := json.Marshal(a.Time)
+	if err != nil {
+		return nil, err
+	}
+	buffer.WriteString(fmt.Sprintf("%s,", string(jsonValue)))
+
+	params := *a.Parameters
+	for p := range params {
+		jsonValue, err = json.Marshal(p)
+		if err != nil {
+			return nil, err
+		}
+		buffer.WriteString(fmt.Sprintf("%s", string(jsonValue)))
+	}
+	buffer.WriteString("]")
+
+	return buffer.Bytes(), nil
 }
 
 func (p *Predicate) UnmarshalJSON(buf []byte) error {
