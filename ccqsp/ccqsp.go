@@ -37,9 +37,9 @@ type Episode struct {
 }
 
 type Predicate struct {
-	Type        string                  `json:"type"`
-	Args        map[string]interface{}  `json:"args"`
-	Annotations *map[string]interface{} `json:"annotations"`
+	Type        string
+	Args        map[string]interface{}
+	Annotations *map[string]interface{}
 }
 
 type ChanceConstraint struct {
@@ -96,7 +96,7 @@ func (a *Assignment) MarshalJSON() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	buffer.WriteString(fmt.Sprintf("%s,", string(jsonValue)))
+	buffer.WriteString(fmt.Sprintf("%s,[", string(jsonValue)))
 
 	params := *a.Parameters
 	length := len(params)
@@ -112,7 +112,7 @@ func (a *Assignment) MarshalJSON() ([]byte, error) {
 			buffer.WriteString(",")
 		}
 	}
-	buffer.WriteString("]")
+	buffer.WriteString("]]")
 
 	return buffer.Bytes(), nil
 }
