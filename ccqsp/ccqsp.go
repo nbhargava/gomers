@@ -99,12 +99,18 @@ func (a *Assignment) MarshalJSON() ([]byte, error) {
 	buffer.WriteString(fmt.Sprintf("%s,", string(jsonValue)))
 
 	params := *a.Parameters
+	length := len(params)
+	count := 0
 	for p := range params {
 		jsonValue, err = json.Marshal(p)
 		if err != nil {
 			return nil, err
 		}
 		buffer.WriteString(fmt.Sprintf("%s", string(jsonValue)))
+		count++
+		if count < length {
+			buffer.WriteString(",")
+		}
 	}
 	buffer.WriteString("]")
 
