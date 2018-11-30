@@ -163,3 +163,36 @@ func (p *Predicate) UnmarshalJSON(buf []byte) error {
 	p.Args = predicate
 	return nil
 }
+
+func (a *Predicate) MarshalJSON() ([]byte, error) {
+	buffer := bytes.NewBufferString("{")
+	typeName, err := json.Marshal(a.Type)
+	if err != nil {
+		return nil, err
+	}
+	buffer.WriteString(fmt.Sprintf("\"type\": %s,", string(typeName)))
+
+	annotations, err := json.Marshal(a.Annotations)
+	if err != nil {
+		return nil, err
+	}
+	buffer.WriteString(fmt.Sprintf("\"annotations\": %s,", string(annotations)))
+
+	args := a.Args
+	length := len(args)
+	count := 0
+	for key, value := range args {
+		jsonValue, err := json.Marshal(value)
+		if err != nil {
+			return nil, err
+		}
+		buffer.WriteString(fmt.Sprintf("\"%s\":%s", key, string(jsonValue)))
+		count++
+		if count < length {
+			buffer.WriteString(",")
+		}
+	}
+
+	buffer.WriteString("}")
+	return buffer.Bytes(), nil
+}
