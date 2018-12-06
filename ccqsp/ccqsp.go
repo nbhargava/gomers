@@ -1,7 +1,6 @@
 package ccqsp
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 )
@@ -91,30 +90,10 @@ func (a *Assignment) UnmarshalJSON(buf []byte) error {
 }
 
 func (a *Assignment) MarshalJSON() ([]byte, error) {
-	buffer := bytes.NewBufferString("[")
-	jsonValue, err := json.Marshal(a.Time)
-	if err != nil {
-		return nil, err
-	}
-	buffer.WriteString(fmt.Sprintf("%s,[", string(jsonValue)))
-
-	params := *a.Parameters
-	length := len(params)
-	count := 0
-	for p := range params {
-		jsonValue, err = json.Marshal(p)
-		if err != nil {
-			return nil, err
-		}
-		buffer.WriteString(fmt.Sprintf("%s", string(jsonValue)))
-		count++
-		if count < length {
-			buffer.WriteString(",")
-		}
-	}
-	buffer.WriteString("]]")
-
-	return buffer.Bytes(), nil
+	return json.Marshal([]interface{}{
+		a.Time,
+		a.Parameters,
+	})
 }
 
 func (p *Predicate) UnmarshalJSON(buf []byte) error {
@@ -165,34 +144,11 @@ func (p *Predicate) UnmarshalJSON(buf []byte) error {
 }
 
 func (a *Predicate) MarshalJSON() ([]byte, error) {
-	buffer := bytes.NewBufferString("{")
-	typeName, err := json.Marshal(a.Type)
-	if err != nil {
-		return nil, err
+	jsonMap := map[string]interface{}{}
+	jsonMap["type"] = a.Type
+	jsonMap["annotations"] = a.Annotations
+	for k, v := range a.Args {
+		jsonMap[k] = v
 	}
-	buffer.WriteString(fmt.Sprintf("\"type\": %s,", string(typeName)))
-
-	annotations, err := json.Marshal(a.Annotations)
-	if err != nil {
-		return nil, err
-	}
-	buffer.WriteString(fmt.Sprintf("\"annotations\": %s,", string(annotations)))
-
-	args := a.Args
-	length := len(args)
-	count := 0
-	for key, value := range args {
-		jsonValue, err := json.Marshal(value)
-		if err != nil {
-			return nil, err
-		}
-		buffer.WriteString(fmt.Sprintf("\"%s\":%s", key, string(jsonValue)))
-		count++
-		if count < length {
-			buffer.WriteString(",")
-		}
-	}
-
-	buffer.WriteString("}")
-	return buffer.Bytes(), nil
+	return json.Marshal(jsonMap)
 }
