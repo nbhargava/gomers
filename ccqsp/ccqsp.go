@@ -28,8 +28,8 @@ type Episode struct {
 	Id                int                     `json:"id"`
 	FromEvent         int                     `json:"fromEvent"`
 	ToEvent           int                     `json:"toEvent"`
-	LowerBound        *int                    `json:"lowerBound"`
-	UpperBound        *int                    `json:"upperBound"`
+	LowerBound        *float64                `json:"lowerBound"`
+	UpperBound        *float64                `json:"upperBound"`
 	Predicate         Predicate               `json:"predicate"`
 	PredicateDuration string                  `json:"predicateDuration"`
 	Annotations       *map[string]interface{} `json:"annotations"`
